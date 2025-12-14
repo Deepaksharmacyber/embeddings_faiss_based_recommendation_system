@@ -1,0 +1,47 @@
+[
+  { "course_id": 1, "title": "Python for Beginners", "description": "Learn Python basics, variables, loops, and functions.", "price": 0, "ai_rating_avg": 4.6, "created_at": "2024-01-10", "is_published": true },
+  { "course_id": 2, "title": "Advanced Python", "description": "Decorators, generators, memory management, performance tuning.", "price": 499, "ai_rating_avg": 4.4, "created_at": "2023-11-15", "is_published": true },
+  { "course_id": 3, "title": "Django Web Development", "description": "Build backend web apps using Django and DRF.", "price": 799, "ai_rating_avg": 4.7, "created_at": "2023-10-05", "is_published": true },
+  { "course_id": 4, "title": "REST APIs with Django", "description": "Design scalable REST APIs using Django REST Framework.", "price": 699, "ai_rating_avg": 4.5, "created_at": "2023-09-10", "is_published": true },
+  { "course_id": 5, "title": "Python Data Structures", "description": "Lists, dictionaries, sets, tuples, and algorithmic thinking.", "price": 299, "ai_rating_avg": 4.3, "created_at": "2024-02-01", "is_published": true },
+
+  { "course_id": 6, "title": "JavaScript Fundamentals", "description": "Learn JS basics, variables, functions, loops, and DOM.", "price": 0, "ai_rating_avg": 4.4, "created_at": "2023-12-10", "is_published": true },
+  { "course_id": 7, "title": "Advanced JavaScript", "description": "Closures, async JS, promises, performance optimization.", "price": 399, "ai_rating_avg": 4.2, "created_at": "2023-10-12", "is_published": true },
+  { "course_id": 8, "title": "React for Beginners", "description": "Build frontend apps using React, JSX, hooks.", "price": 499, "ai_rating_avg": 4.5, "created_at": "2023-11-01", "is_published": true },
+  { "course_id": 9, "title": "Advanced React", "description": "Context API, performance optimization, advanced hooks.", "price": 699, "ai_rating_avg": 4.4, "created_at": "2023-08-15", "is_published": true },
+  { "course_id": 10, "title": "Frontend Development Bootcamp", "description": "HTML, CSS, JavaScript, React end-to-end.", "price": 999, "ai_rating_avg": 4.6, "created_at": "2023-07-20", "is_published": true },
+
+  { "course_id": 11, "title": "SQL for Developers", "description": "Learn SQL queries, joins, indexing, and optimization.", "price": 299, "ai_rating_avg": 4.3, "created_at": "2024-01-05", "is_published": true },
+  { "course_id": 12, "title": "PostgreSQL Deep Dive", "description": "Advanced PostgreSQL features and performance tuning.", "price": 599, "ai_rating_avg": 4.5, "created_at": "2023-09-30", "is_published": true },
+
+  { "course_id": 13, "title": "Docker for Developers", "description": "Containerization basics, Dockerfiles, docker-compose.", "price": 499, "ai_rating_avg": 4.6, "created_at": "2023-10-25", "is_published": true },
+  { "course_id": 14, "title": "Docker + Django Deployment", "description": "Deploy Django apps using Docker and Nginx.", "price": 699, "ai_rating_avg": 4.7, "created_at": "2023-09-18", "is_published": true },
+
+  { "course_id": 15, "title": "Git & GitHub Essentials", "description": "Version control fundamentals for developers.", "price": 0, "ai_rating_avg": 4.5, "created_at": "2024-01-20", "is_published": true },
+
+  { "course_id": 16, "title": "Linux for Developers", "description": "Linux commands, shell scripting, permissions.", "price": 299, "ai_rating_avg": 4.4, "created_at": "2023-11-22", "is_published": true },
+
+  { "course_id": 17, "title": "Python Automation", "description": "Automate tasks using Python scripts.", "price": 399, "ai_rating_avg": 4.6, "created_at": "2023-12-05", "is_published": true },
+  { "course_id": 18, "title": "Web Scraping with Python", "description": "Scrape websites using BeautifulSoup and Selenium.", "price": 499, "ai_rating_avg": 4.5, "created_at": "2023-11-10", "is_published": true },
+
+  { "course_id": 19, "title": "FastAPI for Backend", "description": "Build high-performance APIs using FastAPI.", "price": 699, "ai_rating_avg": 4.6, "created_at": "2023-10-01", "is_published": true },
+  { "course_id": 20, "title": "Microservices with Python", "description": "Design microservices architecture using Python.", "price": 899, "ai_rating_avg": 4.7, "created_at": "2023-08-01", "is_published": true },
+
+  { "course_id": 21, "title": "Data Analysis with Python", "description": "Pandas, NumPy, and data visualization.", "price": 599, "ai_rating_avg": 4.5, "created_at": "2023-07-15", "is_published": true },
+  { "course_id": 22, "title": "Machine Learning Basics", "description": "Intro to ML concepts using Python.", "price": 799, "ai_rating_avg": 4.4, "created_at": "2023-06-20", "is_published": true },
+
+  { "course_id": 23, "title": "Elasticsearch for Developers", "description": "Search systems using Elasticsearch.", "price": 699, "ai_rating_avg": 4.6, "created_at": "2023-09-01", "is_published": true },
+  { "course_id": 24, "title": "Redis in Practice", "description": "Caching strategies using Redis.", "price": 399, "ai_rating_avg": 4.3, "created_at": "2023-10-08", "is_published": true },
+
+  { "course_id": 25, "title": "System Design Basics", "description": "Scalable system design fundamentals.", "price": 999, "ai_rating_avg": 4.7, "created_at": "2023-05-10", "is_published": true },
+
+  { "course_id": 26, "title": "Backend Developer Roadmap", "description": "Complete backend learning path.", "price": 1299, "ai_rating_avg": 4.8, "created_at": "2023-04-01", "is_published": true },
+
+  { "course_id": 27, "title": "API Security", "description": "Authentication, authorization, JWT, OAuth.", "price": 599, "ai_rating_avg": 4.4, "created_at": "2023-08-18", "is_published": true },
+
+  { "course_id": 28, "title": "Testing Django Applications", "description": "Unit tests, integration tests, pytest.", "price": 399, "ai_rating_avg": 4.5, "created_at": "2023-11-03", "is_published": true },
+
+  { "course_id": 29, "title": "Clean Code in Python", "description": "Write maintainable, clean Python code.", "price": 299, "ai_rating_avg": 4.6, "created_at": "2023-12-01", "is_published": true },
+
+  { "course_id": 30, "title": "Python Interview Preparation", "description": "DSA, coding patterns, interview questions.", "price": 499, "ai_rating_avg": 4.7, "created_at": "2023-10-20", "is_published": true }
+]

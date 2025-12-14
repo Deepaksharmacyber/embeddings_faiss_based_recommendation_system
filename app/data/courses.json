@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "title": "Python for Beginners",
+    "description": "Learn Python from scratch. Variables, loops, and functions.",
+    "category": "Programming",
+    "language": "Python",
+    "level": "Beginner",
+    "domain": "Backend"
+  },
+  {
+    "id": 2,
+    "title": "Advanced Python",
+    "description": "Deep dive into decorators, generators, and performance tuning.",
+    "category": "Programming",
+    "language": "Python",
+    "level": "Advanced",
+    "domain": "Backend"
+  },
+  {
+    "id": 3,
+    "title": "Django Web Development",
+    "description": "Build web applications using Django and REST framework.",
+    "category": "Web Development",
+    "language": "Python",
+    "level": "Intermediate",
+    "domain": "Backend"
+  },
+  {
+    "id": 4,
+    "title": "JavaScript Fundamentals",
+    "description": "Understand JavaScript basics, DOM manipulation, and events.",
+    "category": "Programming",
+    "language": "JavaScript",
+    "level": "Beginner",
+    "domain": "Frontend"
+  },
+  {
+    "id": 5,
+    "title": "React for Beginners",
+    "description": "Build frontend applications using React and hooks.",
+    "category": "Web Development",
+    "language": "JavaScript",
+    "level": "Beginner",
+    "domain": "Frontend"
+  }
+]

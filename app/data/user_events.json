@@ -1,0 +1,13 @@
+{
+  "user_id": 101,
+  "events": [
+    {
+      "course_id": 1,
+      "event_type": "view"
+    },
+    {
+      "course_id": 3,
+      "event_type": "purchase"
+    }
+  ]
+}

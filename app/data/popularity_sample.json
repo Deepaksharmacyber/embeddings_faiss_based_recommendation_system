@@ -1,0 +1,22 @@
+{
+  "1": { "enrollments": 520, "avg_progress": 68 },
+  "2": { "enrollments": 310, "avg_progress": 55 },
+  "3": { "enrollments": 760, "avg_progress": 72 },
+  "4": { "enrollments": 420, "avg_progress": 60 },
+  "5": { "enrollments": 290, "avg_progress": 58 },
+  "6": { "enrollments": 610, "avg_progress": 64 },
+  "7": { "enrollments": 260, "avg_progress": 52 },
+  "8": { "enrollments": 580, "avg_progress": 67 },
+  "9": { "enrollments": 340, "avg_progress": 59 },
+  "10": { "enrollments": 820, "avg_progress": 71 },
+
+  "13": { "enrollments": 410, "avg_progress": 63 },
+  "14": { "enrollments": 370, "avg_progress": 66 },
+  "17": { "enrollments": 450, "avg_progress": 69 },
+  "18": { "enrollments": 390, "avg_progress": 61 },
+  "19": { "enrollments": 280, "avg_progress": 57 },
+  "20": { "enrollments": 330, "avg_progress": 62 },
+  "25": { "enrollments": 910, "avg_progress": 75 },
+  "26": { "enrollments": 1020, "avg_progress": 78 },
+  "30": { "enrollments": 690, "avg_progress": 70 }
+}

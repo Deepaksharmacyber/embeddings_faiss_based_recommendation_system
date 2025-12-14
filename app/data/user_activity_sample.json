@@ -1,0 +1,12 @@
+{
+  "user_id": 301,
+  "activities": [
+    { "course_id": 6,  "activity_type": "enrolled",        "progress": 60, "timestamp": "2024-02-01T09:00:00" },
+    { "course_id": 7,  "activity_type": "progress_update", "progress": 70, "timestamp": "2024-02-03T14:00:00" },
+    { "course_id": 8,  "activity_type": "view",            "progress": 0,  "timestamp": "2024-02-05T10:30:00" },
+    { "course_id": 9,  "activity_type": "view",            "progress": 0,  "timestamp": "2024-02-06T11:45:00" },
+    { "course_id": 10, "activity_type": "view",            "progress": 0,  "timestamp": "2024-02-07T13:00:00" },
+    { "course_id": 15, "activity_type": "view",            "progress": 0,  "timestamp": "2024-02-08T16:20:00" },
+    { "course_id": 25, "activity_type": "view",            "progress": 0,  "timestamp": "2024-02-09T18:10:00" }
+  ]
+}

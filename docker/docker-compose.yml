@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  reco:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: course_reco_lab
+    volumes:
+      - ../app:/app
+    stdin_open: true
+    tty: true
