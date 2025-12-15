@@ -5,33 +5,26 @@ from sentence_transformers import SentenceTransformer
 
 MODEL_NAME = "all-MiniLM-L6-v2"
 
-# --------------------------------------------------
-# Category taxonomy
-# --------------------------------------------------
-
-CATEGORY_KEYWORDS = {
-    "backend": ["python", "django", "backend", "api", "fastapi", "server", "microservice"],
-    "frontend": ["react", "javascript", "frontend", "html", "css"],
-    "devops": ["docker", "kubernetes", "deployment", "ci/cd"],
-    "database": ["sql", "postgres", "database"],
-    "system_design": ["system design", "scalable", "architecture"],
-    "data": ["data", "pandas", "numpy", "analysis"],
-    "ml": ["machine learning", "ml", "model"]
-}
-
-# Hybrid weights (category handled by gating, not scoring)
+# ---------------------------------------
+# Hybrid weights
+# ---------------------------------------
 WEIGHTS = {
-    "user_similarity": 0.45,
-    "content_similarity": 0.35,
+    "user_similarity": 0.55,
+    "content_similarity": 0.25,
     "popularity": 0.20
 }
 
-MAX_FAISS_CANDIDATES = 30
+EVENT_WEIGHTS = {
+    "view": 0.3,
+    "enrolled": 1.0
+}
+
+MAX_FAISS_CANDIDATES = 50
 
 
-# --------------------------------------------------
-# Helper functions
-# --------------------------------------------------
+# ---------------------------------------
+# Helpers
+# ---------------------------------------
 
 def normalize(values):
     min_v, max_v = min(values), max(values)
@@ -40,55 +33,13 @@ def normalize(values):
     return [(v - min_v) / (max_v - min_v) for v in values]
 
 
-def infer_user_interests(user_activity, course_by_id):
-    """
-    Learn multi-category interest distribution from user behavior.
-    """
-    interests = {k: 0.0 for k in CATEGORY_KEYWORDS.keys()}
-
-    for a in user_activity["activities"]:
-        course = course_by_id[a["course_id"]]
-        text = (course["title"] + " " + course["description"]).lower()
-
-        weight = 1.0
-        if a["activity_type"] == "enrolled":
-            weight = 2.0
-        elif a["activity_type"] == "progress_update":
-            weight = 2.5
-
-        weight += a["progress"] / 100
-
-        for category, keywords in CATEGORY_KEYWORDS.items():
-            if any(k in text for k in keywords):
-                interests[category] += weight
-
-    total = sum(interests.values()) or 1.0
-    for k in interests:
-        interests[k] /= total
-
-    return interests
-
-
-def get_primary_category(user_interests):
-    """
-    Dominant user intent (single strongest category).
-    """
-    return max(user_interests.items(), key=lambda x: x[1])[0]
-
-
-def course_matches_primary_category(course, primary_category):
-    """
-    Gate courses by primary user intent.
-    """
-    text = (course["title"] + " " + course["description"]).lower()
-    return any(k in text for k in CATEGORY_KEYWORDS[primary_category])
-
-
-# --------------------------------------------------
+# ---------------------------------------
 # Hybrid Recommendation Engine
-# --------------------------------------------------
+# ---------------------------------------
 
 def hybrid_recommend(top_k=5):
+    print("\n🚀 Starting Hybrid Recommendation Engine")
+
     model = SentenceTransformer(MODEL_NAME)
 
     # ---------------------------
@@ -100,44 +51,65 @@ def hybrid_recommend(top_k=5):
 
     course_by_index = {i: c for i, c in enumerate(courses)}
     course_by_id = {c["course_id"]: c for c in courses}
+
     seen_courses = {a["course_id"] for a in user_activity["activities"]}
 
-    # ---------------------------
-    # Infer user intent
-    # ---------------------------
-    user_interests = infer_user_interests(user_activity, course_by_id)
-    primary_category = get_primary_category(user_interests)
-
-    print("\n🧠 User interest distribution:")
-    for k, v in sorted(user_interests.items(), key=lambda x: -x[1]):
-        if v > 0:
-            print(f"  {k}: {round(v, 2)}")
-
-    print(f"\n🎯 Primary user intent: {primary_category}")
+    print(f"📦 Total courses: {len(courses)}")
+    print(f"👀 Seen courses: {seen_courses}")
 
     # ---------------------------
-    # Load vectors
+    # Build USER EMBEDDING (views + enrollments only)
     # ---------------------------
-    user_vector = np.load("user_embedding.npy").reshape(1, -1)
+    course_embeddings = np.load("course_embeddings.npy")
+    user_vector = np.zeros(course_embeddings.shape[1])
+    total_weight = 0.0
+
+    for a in user_activity["activities"]:
+        cid = a["course_id"]
+        event = a["activity_type"]
+
+        if event not in EVENT_WEIGHTS:
+            continue
+
+        weight = EVENT_WEIGHTS[event]
+        user_vector += weight * course_embeddings[cid - 1]
+        total_weight += weight
+
+    if total_weight > 0:
+        user_vector /= total_weight
+
+    user_vector = user_vector.reshape(1, -1)
+
+    print("🧠 User embedding built from views + enrollments")
+
+    # ---------------------------
+    # FAISS user similarity
+    # ---------------------------
     index = faiss.read_index("index/faiss.index")
-
     k = min(MAX_FAISS_CANDIDATES, index.ntotal)
 
-    # ---------------------------
-    # 1️⃣ FAISS user similarity
-    # ---------------------------
-    user_distances, user_indices = index.search(user_vector, k)
+    distances, indices = index.search(user_vector, k)
 
     candidates = []
 
-    for idx, dist in zip(user_indices[0], user_distances[0]):
+    for idx, dist in zip(indices[0], distances[0]):
         if idx == -1:
             continue
 
         course = course_by_index[idx]
+        cid = course["course_id"]
 
-        # 🔥 PRIMARY-INTENT GATE (CORE FIX)
-        if not course_matches_primary_category(course, primary_category):
+        # if cid in seen_courses:
+        #     continue
+
+        enrolled_courses = {
+            a["course_id"]
+            for a in user_activity["activities"]
+            if a["activity_type"] == "enrolled"
+        }
+
+        if cid in enrolled_courses:
+            print(f'enrolled courses {cid}')
             continue
 
         candidates.append({
@@ -147,26 +119,21 @@ def hybrid_recommend(top_k=5):
             "popularity": 0.0
         })
 
+    print(f"🔍 Candidates after FAISS & seen-filter: {len(candidates)}")
+
     if not candidates:
-        print("\n⚠️ No candidates after intent gating.")
+        print("❌ No candidates found")
         return
 
     # ---------------------------
-    # 2️⃣ Content similarity (last strong intent)
+    # Content similarity (last enrolled / viewed)
     # ---------------------------
-    last_strong = next(
-        a for a in reversed(user_activity["activities"])
-        if a["activity_type"] in ("enrolled", "progress_update")
-    )
+    last_event = user_activity["activities"][-1]
+    last_course = course_by_id[last_event["course_id"]]
 
-    last_course = course_by_id[last_strong["course_id"]]
-
-    content_text = f"""
-    Title: {last_course['title']}
-    Description: {last_course['description']}
-    """
-
+    content_text = f"{last_course['title']} {last_course['description']}"
     content_vector = model.encode([content_text])
+
     content_distances, content_indices = index.search(content_vector, k)
 
     content_score_map = {}
@@ -180,16 +147,20 @@ def hybrid_recommend(top_k=5):
         cid = c["course"]["course_id"]
         c["content_similarity"] = content_score_map.get(cid, 0.0)
 
+    print("📐 Content similarity computed")
+
     # ---------------------------
-    # 3️⃣ Popularity
+    # Popularity
     # ---------------------------
     for c in candidates:
         cid = str(c["course"]["course_id"])
         pop = popularity.get(cid, {"enrollments": 0, "avg_progress": 0})
-        c["popularity"] = pop["enrollments"] * 0.7 + pop["avg_progress"] * 0.3
+        c["popularity"] = pop["enrollments"]
+
+    print("🔥 Popularity scores added")
 
     # ---------------------------
-    # 4️⃣ Normalize scores
+    # Normalize scores
     # ---------------------------
     for key in ["user_similarity", "content_similarity", "popularity"]:
         vals = [c[key] for c in candidates]
@@ -198,31 +169,26 @@ def hybrid_recommend(top_k=5):
             c[key] = norm_vals[i]
 
     # ---------------------------
-    # 5️⃣ Final hybrid score
+    # Final hybrid score
     # ---------------------------
-    final_list = []
-
     for c in candidates:
-        cid = c["course"]["course_id"]
-        if cid in seen_courses:
-            continue
-
         c["final_score"] = (
             WEIGHTS["user_similarity"] * c["user_similarity"] +
             WEIGHTS["content_similarity"] * c["content_similarity"] +
             WEIGHTS["popularity"] * c["popularity"]
         )
 
-        final_list.append(c)
-
-    final_list.sort(key=lambda x: x["final_score"], reverse=True)
+    candidates.sort(key=lambda x: x["final_score"], reverse=True)
 
     # ---------------------------
     # Output
     # ---------------------------
     print("\n📌 Final Hybrid Recommendations:")
-    for r in final_list[:top_k]:
-        print("-", r["course"]["title"])
+    for r in candidates[:top_k]:
+        print(
+            f"- {r['course']['title']} "
+            f"(score={round(r['final_score'], 3)})"
+        )
 
 
 if __name__ == "__main__":
